@@ -5,6 +5,7 @@ defmodule Blog.Dataloader.Repo.Employee do
   schema "employees" do
     field(:name, :string)
     field(:email, :string)
+    field(:status, :string)
 
     belongs_to(:company, Company)
 

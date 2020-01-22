@@ -9,6 +9,7 @@ defmodule Blog.Dataloader.Schema.Employee do
     field(:id, non_null(:string))
     field(:name, non_null(:string))
     field(:email, non_null(:string))
+    field(:status, non_null(:string))
 
     field(:company, non_null(:company)) do
       resolve(dataloader(Repo))

@@ -16,7 +16,12 @@ defmodule Blog.Dataloader.Schema.Company do
 
       resolve(
         dataloader(Repo, fn company, args, _info ->
-          {:employees, Map.put(args, :company_id, company.id)}
+          args =
+            args
+            |> Map.put(:company_id, company.id)
+            |> Map.put(:query, &Blog.Dataloader.Employee.Query.where_active/1)
+
+          {:employees, args}
         end)
       )
     end

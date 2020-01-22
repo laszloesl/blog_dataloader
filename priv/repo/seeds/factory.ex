@@ -20,7 +20,8 @@ defmodule Blog.Dataloader.Repo.Seeds.Factory do
     %Employee{
       name: name,
       email: email,
-      company: company
+      company: company,
+      status: "registered"
     }
   end
 end

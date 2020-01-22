@@ -3,8 +3,6 @@ defmodule Blog.Dataloader.Repo do
     otp_app: :blog_dataloader,
     adapter: Ecto.Adapters.Postgres
 
-  alias Blog.Dataloader.Repo
-
   require Logger
   require Ecto.Query
 
@@ -16,6 +14,7 @@ defmodule Blog.Dataloader.Repo do
 
     queryable
     |> paginate(params[:paginate])
+    |> apply_query(params[:query], params[:query_args] || [])
   end
 
   def paginate(query, nil), do: query
@@ -34,5 +33,11 @@ defmodule Blog.Dataloader.Repo do
 
     params
     |> Map.merge(%{limit: limit, offset: offset})
+  end
+
+  def apply_query(queryable, nil, _query_args), do: queryable
+
+  def apply_query(queryable, query, query_args) do
+    apply(query, [queryable | query_args])
   end
 end

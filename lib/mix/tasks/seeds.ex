@@ -21,7 +21,7 @@ defmodule Mix.Tasks.Ecto.Seeds do
       1..1000
       |> Enum.map(fn _ -> build(:employee, company_id: Enum.random(companies).id) end)
       |> Enum.map(&Map.from_struct/1)
-      |> Enum.map(&Map.take(&1, [:name, :email, :company_id]))
+      |> Enum.map(&Map.take(&1, [:name, :email, :company_id, :status]))
       |> Enum.map(fn map ->
         {:ok, inserted_at} = Ecto.Type.cast(:naive_datetime, DateTime.utc_now())
         {:ok, updated_at} = Ecto.Type.cast(:naive_datetime, DateTime.utc_now())
