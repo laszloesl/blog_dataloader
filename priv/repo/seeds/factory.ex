@@ -16,12 +16,13 @@ defmodule Blog.Dataloader.Repo.Seeds.Factory do
     name = sequence(:employee_name, &"ExMachina-#{&1}")
     email = sequence(:email, &"email-#{&1}@example.com")
     company = build(:company)
+    status = Enum.random(["registered", "active"])
 
     %Employee{
       name: name,
       email: email,
       company: company,
-      status: "registered"
+      status: status
     }
   end
 end

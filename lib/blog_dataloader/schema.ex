@@ -7,6 +7,7 @@ defmodule Blog.Dataloader.Schema do
 
   input_object :pagination_input do
     field(:limit, :integer)
+    field(:offset, :integer)
   end
 
   query do
@@ -22,11 +23,29 @@ defmodule Blog.Dataloader.Schema do
         Repo,
         Dataloader.Ecto.new(Repo, query: &Repo.dataloader_query/2)
       )
+      |> Dataloader.add_source(:address, Dataloader.KV.new(&fetch_addresses/2))
 
     Map.put(ctx, :loader, loader)
+    |> Map.put(:user_token, "hello")
   end
 
   def plugins do
     [Absinthe.Middleware.Dataloader | Absinthe.Plugin.defaults()]
+  end
+
+  def fetch_addresses(_batch_key, employees) do
+    ids = Enum.map(employees, & &1.id)
+    results = call_to_another_service(ids)
+
+    employees
+    |> Map.new(&{&1, lookup_result_for_employee(&1, results)})
+  end
+
+  defp call_to_another_service(ids) do
+    Map.new(ids, &{&1, "address of #{&1}"})
+  end
+
+  defp lookup_result_for_employee(employee, results) do
+    results[employee.id]
   end
 end

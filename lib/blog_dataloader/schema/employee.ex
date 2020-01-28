@@ -14,30 +14,26 @@ defmodule Blog.Dataloader.Schema.Employee do
     field(:company, non_null(:company)) do
       resolve(dataloader(Repo))
     end
-  end
 
-  input_object :get_employee_input do
-    field(:id, non_null(:id))
-  end
-
-  object :get_employee_payload do
-    field(:employee, non_null(:employee))
+    field(:address, non_null(:string)) do
+      resolve(dataloader(:address))
+    end
   end
 
   object(:employee_queries) do
-    field :get_employee, type: :get_employee_payload do
-      arg(:input, non_null(:get_employee_input))
+    field :employee, type: :employee do
+      arg(:id, non_null(:id))
       resolve(&get_employee/2)
     end
   end
 
-  defp get_employee(%{input: params}, _info) do
+  defp get_employee(params, _info) do
     case Repo.get(Employee, params[:id]) do
       nil ->
         {:error, "Employee does not exist"}
 
       employee ->
-        {:ok, %{employee: employee}}
+        {:ok, employee}
     end
   end
 end
